@@ -16,7 +16,7 @@ const authController = {
       name: Joi.string().max(30).required(),
       email: Joi.string().email().required(),
       password: Joi.string().pattern(passwordPattern).required(),
-      confirmpassword: Joi.ref("password"),
+      confirmPassword: Joi.ref("password"),
     });
 
     const { error } = userRegisterSchema.validate(req.body);

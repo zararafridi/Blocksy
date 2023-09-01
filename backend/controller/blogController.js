@@ -68,6 +68,11 @@ const blogController = {
 
     return res.status(201).json({ blog: blogDTO });
   },
+
+
+
+
+
   async getAll(req, res, next) {
     try {
       let blogs = await Blog.find({});
@@ -84,6 +89,12 @@ const blogController = {
       return next(error);
     }
   },
+
+
+
+
+
+  
   async getById(req, res, next) {
     // validate id
     // response
