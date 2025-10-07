@@ -1,114 +1,152 @@
 import axios from "axios";
 
+
 const api = axios.create({
   baseURL: process.env.REACT_APP_INTERNAL_API_PATH,
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  headers: { "Content-Type": "application/json" },
 });
 
-export const login = async (data) => {
-  let response;
+// Track if a refresh request is already in progress
+let isRefreshing = false;
+let failedQueue = [];
 
+// Function to process queued requests after token refresh
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
+// Add interceptor
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // Prevent infinite loop
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        // Wait until refresh completes
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers["Authorization"] = "Bearer " + token;
+            return api(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_INTERNAL_API_PATH}/refresh`,
+          { withCredentials: true }
+        );
+
+        const newToken = res.data?.accessToken;
+        api.defaults.headers.common["Authorization"] = "Bearer " + newToken;
+        processQueue(null, newToken);
+        return api(originalRequest);
+      } catch (err) {
+        processQueue(err, null);
+        return Promise.reject(err);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+// 🧩 API functions
+export const login = async (data) => {
   try {
-    response = await api.post("/login", data);
+    return await api.post("/login", data);
   } catch (error) {
     return error;
   }
-  return response;
 };
 
 export const signup = async (data) => {
-  let response;
-
   try {
-    response = await api.post("/register", data);
+    return await api.post("/register", data);
   } catch (error) {
     return error;
   }
-  return response;
 };
 
 export const signout = async () => {
-  let response;
-
   try {
-    response = await api.post("/logout");
+    return await api.post("/logout");
   } catch (error) {
     return error;
   }
-  return response;
 };
 
 export const getAllBlog = async () => {
-  let response;
   try {
-    response = await api.get("/blog/all");
+    return await api.get("/blog/all");
   } catch (error) {
     return error;
   }
-  return response;
 };
 
 export const submitBlog = async (data) => {
-  let response;
   try {
-    response = await api.post("/blog", data);
+    return await api.post("/blog", data);
   } catch (error) {
     return error;
   }
-  return response;
 };
 
 export const getBlogById = async (id) => {
-  let response;
   try {
-    response = await api.get(`/blog/${id}`);
+    return await api.get(`/blog/${id}`);
   } catch (error) {
     return error;
   }
-  return response;
 };
 
 export const getCommentById = async (id) => {
-  let response;
   try {
-    response = await api.get(`/comment/${id}`, {
-      validateStatus: false,
-    });
+    return await api.get(`/comment/${id}`, { validateStatus: false });
   } catch (error) {
     return error;
   }
-  return response;
 };
 
 export const postComment = async (data) => {
-  let response;
   try {
-    response = await api.post("/comment", data);
+    return await api.post("/comment", data);
   } catch (error) {
     return error;
   }
-  return response;
 };
 
 export const deletBlog = async (id) => {
-  let response;
   try {
-    response = await api.delete(`/blog/${id}`);
+    return await api.delete(`/blog/${id}`);
   } catch (error) {
     return error;
   }
-  return response;
 };
 
 export const updateBlog = async (data) => {
-  let response;
   try {
-    response = await api.put("/blog", data);
+    return await api.put("/blog", data);
   } catch (error) {
     return error;
   }
-  return response;
 };
+
+export default api;

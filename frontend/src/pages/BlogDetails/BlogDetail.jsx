@@ -94,6 +94,8 @@ const BlogDetail = () => {
       </div>
       <div className={styles.right}>
         <div className={styles.commentsWapper}>
+
+          <h2 className={styles.commentsTitle}>Comments</h2>
           <CommentList comments={comments} />
           <div className={styles.postComment}>
             <input
