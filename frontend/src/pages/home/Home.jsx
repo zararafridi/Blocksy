@@ -20,9 +20,9 @@ function Home() {
     window.open(url, "_blank");
   };
 
-  if (articles.length === 0) {
-    return <Loader text="homepage" />;
-  }
+  // if (articles.length === 0) {
+  //   return <Loader text="homepage" />;
+  // }
 
   return (
     <>
