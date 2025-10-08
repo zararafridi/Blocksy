@@ -73,7 +73,7 @@ const authController = {
       // token genration
       accessToken = JWTService.signAccessToken({ _id: user._id }, "30m");
 
-      refreshToken = JWTService.signRefreshToken({ _id: user._id }, "60m");
+      refreshToken = JWTService.signRefreshToken({ _id: user._id }, "7d");
     } catch (error) {
       return next(error);
     }
@@ -135,7 +135,7 @@ const authController = {
     }
 
     let accessToken = JWTService.signAccessToken({ _id: user._id }, "30m");
-    let refreshToken = JWTService.signRefreshToken({ _id: user._id }, "60m");
+    let refreshToken = JWTService.signRefreshToken({ _id: user._id }, "7d");
 
     // update refreshToken in database
     try {
@@ -210,7 +210,7 @@ const authController = {
 
   try {
     const accessToken = JWTService.signAccessToken({ _id: id }, "30m");
-    const refreshToken = JWTService.signRefreshToken({ _id: id }, "60m");
+    const refreshToken = JWTService.signRefreshToken({ _id: id }, "7d");
     await RefreshToken.updateOne({ _id: id }, { token: refreshToken });
 
     res.cookie("accessToken", accessToken, {
