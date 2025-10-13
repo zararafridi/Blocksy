@@ -8,12 +8,14 @@
     const cors = require('cors')
 
 
-    const cors = require("cors");
 
 const allowedOrigins = [
   "http://localhost:3000",                // local dev
   "https://blocksy-lovat.vercel.app"      // your deployed frontend
 ];
+
+
+  const app = express();
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -27,7 +29,7 @@ app.use(cors({
 }));
 
     
-    const app = express();
+  
     // app.use(cors(corsOptions))
     app.use(cookieParser());
     app.use(bodyParser.urlencoded({ extended: true }));
