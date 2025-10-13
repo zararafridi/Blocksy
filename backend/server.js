@@ -8,14 +8,27 @@
     const cors = require('cors')
 
 
-    const corsOptions ={
-    origin:'http://localhost:3000', 
-    credentials:true,            
-    
-}
+    const cors = require("cors");
+
+const allowedOrigins = [
+  "http://localhost:3000",                // local dev
+  "https://blocksy-lovat.vercel.app"      // your deployed frontend
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
+
     
     const app = express();
-    app.use(cors(corsOptions))
+    // app.use(cors(corsOptions))
     app.use(cookieParser());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(express.json({limit : '50mb'}));
