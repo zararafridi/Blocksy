@@ -21,12 +21,12 @@ import UpdateBlog from "./pages/UpdateBlog/UpdateBlog";
 function App() {
   const dispatch = useDispatch();
   const isAuth = useSelector((state) => state.user.auth);
-
+  const BACKEND_URL = process.env.REACT_APP_INTERNAL_API_PATH;
   // ✅ Check session on first load
  useEffect(() => {
   const checkAuth = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/refresh", {
+      const response = await axios.get(`${BACKEND_URL}/refresh`, {
         withCredentials: true, // needed for cookies
       });
 

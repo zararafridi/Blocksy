@@ -23,7 +23,7 @@ class JWTService {
 
   // verify refresh token
   static verifyRefreshToken(token){
-    return jwt.verify(token, ACCESS_TOKEN_SECRET)
+    return jwt.verify(token, REFRESH_TOKEN_SECRET)
   }
 
 
