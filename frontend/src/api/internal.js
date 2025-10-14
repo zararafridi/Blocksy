@@ -69,6 +69,29 @@ api.interceptors.response.use(
 );
 
 // 🧩 API functions
+
+
+
+// export const getNews = async () => {
+//   try {
+//     const response = await axios.get(`${BACKEND_URL}/api/news`);
+//     return response.data; // articles come directly from backend
+//   } catch (error) {
+//     console.error("Error fetching news:", error);
+//     return [];
+//   }
+// };
+
+export const getNews = async () => {
+  try {
+    const response = await api.get("/news"); // ✅ calls your backend /api/news
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching news:", error);
+    return [];
+  }
+};
+
 export const login = async (data) => {
   try {
     return await api.post("/login", data);

@@ -2,7 +2,9 @@ const express = require('express');
 const authController = require('../controller/authController')
 const blogController = require('../controller/blogController')
 const commentController = require('../controller/commentController')
-const auth = require('../middleware/auth')
+const auth = require('../middleware/auth');
+const { getNews } = require('../controller/NewsApi');
+
 
 const router = express.Router();
 
@@ -12,6 +14,7 @@ const router = express.Router();
 //  })
 
 // user
+router.get("/news",getNews)
 
 // register
 router.post('/register',authController.register);

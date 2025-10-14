@@ -1,40 +1,39 @@
 import { useState, useEffect } from "react";
-import { getNews } from "../../api/external";
+import { getNews } from "../../api/internal";
 import styles from "./Home.module.css";
 import Loader from "../../components/loader/Loader";
 
 function Home() {
   const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    (async function newsApiCall() {
-      const response = await getNews();
-      setArticles(response);
+    (async () => {
+      const data = await getNews();
+      setArticles(data);
+      setLoading(false);
     })();
+  }, []); // ✅ only call once
 
-    // clean up function
-    setArticles([]);
-  },[]);
-
-  const handelCardClick = (url) => {
+  const handleCardClick = (url) => {
     window.open(url, "_blank");
   };
 
-  // if (articles.length === 0) {
-  //   return <Loader text="homepage" />;
-  // }
+  if (loading) {
+    return <Loader text="Loading news..." />;
+  }
 
   return (
     <>
-      <div className={styles.header}>Latest Articels</div>
+      <div className={styles.header}>Latest Articles</div>
       <div className={styles.grid}>
-        {articles.map((article) => (
+        {articles.map((article, i) => (
           <div
             className={styles.card}
-            key={article.url}
-            onClick={() => handelCardClick(article.url)}
+            key={i}
+            onClick={() => handleCardClick(article.url)}
           >
-            <img alt="" src={article.urlToImage} />
+            <img src={article.urlToImage} alt="news" />
             <h3>{article.title}</h3>
           </div>
         ))}
