@@ -18,7 +18,7 @@ const Navbar = () => {
     <>
       <nav className={style.navbar}>
         <NavLink className={`${style.logo} ${style.inActiveStyle}`} to="/">
-          CoinBounce
+          Blocksy
         </NavLink>
         <NavLink
           to="/"
