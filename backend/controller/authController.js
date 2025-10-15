@@ -81,14 +81,19 @@ const authController = {
     await JWTService.storeRefreshToken(refreshToken, user._id);
 
     res.cookie("accessToken", accessToken, {
-      maxAge: 1000 * 60 * 60 * 24,
-      httpOnly: true,
-    });
+  httpOnly: true,
+  secure: true,              // must be true on HTTPS (Railway + Vercel are HTTPS)
+  sameSite: "None",          // REQUIRED for cross-origin cookies
+  maxAge: 15 * 60 * 1000,    // 15 minutes
+});
 
-    res.cookie("refreshToken", refreshToken, {
-      maxAge: 1000 * 60 * 60 * 24,
-      httpOnly: true,
-    });
+res.cookie("refreshToken", refreshToken, {
+  httpOnly: true,
+  secure: true,
+  sameSite: "None",
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+});
+
 
     // 6) send response
     const userDTO = new UserDTO(user);
@@ -151,14 +156,19 @@ const authController = {
     }
 
     res.cookie("accessToken", accessToken, {
-      maxAge: 1000 * 60 * 60 * 24,
-      httpOnly: true,
-    });
+  httpOnly: true,
+  secure: true,              // must be true on HTTPS (Railway + Vercel are HTTPS)
+  sameSite: "None",          // REQUIRED for cross-origin cookies
+  maxAge: 15 * 60 * 1000,    // 15 minutes
+});
 
-    res.cookie("refreshToken", refreshToken, {
-      maxAge: 1000 * 60 * 60 * 24,
-      httpOnly: true,
-    });
+res.cookie("refreshToken", refreshToken, {
+  httpOnly: true,
+  secure: true,
+  sameSite: "None",
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+});
+
 
     const userDTO = new UserDTO(user);
     return res.status(200).json({ user: userDTO, auth: true });
